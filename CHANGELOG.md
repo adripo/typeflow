@@ -18,6 +18,7 @@ All notable changes to TypeFlow are documented in this file. The format is based
 - The last five seconds of a timed test change the clock color
 - Result actions stay pinned below the scrolling results
 - The result card's top edge is a smooth curve of the pace of the run
+- Finishing a test leaves focus off Retry, so Space does not restart it. Tab, then Space, retries
 
 ## [1.0.0] - 2026-10-15
 

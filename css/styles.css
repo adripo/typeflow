@@ -401,6 +401,10 @@ main {
   padding-bottom: 0;
 }
 
+.view:focus {
+  outline: none;
+}
+
 .view-body {
   flex: 1 1 auto;
   min-height: 0;

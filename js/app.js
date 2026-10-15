@@ -124,6 +124,10 @@ document.addEventListener("keydown", (event) => {
     openSettings();
     return;
   }
+  if (view === "results" && event.key === " " && event.target === document.getElementById("view-results")) {
+    event.preventDefault();
+    return;
+  }
   if (!test) return;
   if (event.key === "Tab" && document.activeElement === input) {
     event.preventDefault();
@@ -177,7 +181,7 @@ function complete() {
   ui.blurCapture();
   ui.syncConfig(settings, false);
   document.title = `${Number(lastResult.wpm).toFixed(2)} WPM · TypeFlow`;
-  document.getElementById("result-retry")?.focus({ preventScroll: true });
+  document.getElementById("view-results")?.focus({ preventScroll: true });
 }
 
 function restart() {
