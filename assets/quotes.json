@@ -98,5 +98,141 @@
       "text": "Il bel paese là dove 'l sì suona.",
       "author": "Dante Alighieri"
     }
+  ],
+  "es": [
+    {
+      "text": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme.",
+      "author": "Miguel de Cervantes"
+    },
+    {
+      "text": "La pluma es lengua del alma.",
+      "author": "Miguel de Cervantes"
+    },
+    {
+      "text": "El que lee mucho y anda mucho, ve mucho y sabe mucho.",
+      "author": "Miguel de Cervantes"
+    },
+    {
+      "text": "Poderoso caballero es don Dinero.",
+      "author": "Francisco de Quevedo"
+    },
+    {
+      "text": "Ande yo caliente y ríase la gente.",
+      "author": "Luis de Góngora"
+    },
+    {
+      "text": "Caminante, no hay camino, se hace camino al andar.",
+      "author": "Antonio Machado"
+    },
+    {
+      "text": "Yo voy soñando caminos de la tarde.",
+      "author": "Antonio Machado"
+    },
+    {
+      "text": "Verde que te quiero verde.",
+      "author": "Federico García Lorca"
+    }
+  ],
+  "fr": [
+    {
+      "text": "Le cœur a ses raisons que la raison ne connaît point.",
+      "author": "Blaise Pascal"
+    },
+    {
+      "text": "Il faut cultiver notre jardin.",
+      "author": "Voltaire"
+    },
+    {
+      "text": "Je pense, donc je suis.",
+      "author": "René Descartes"
+    },
+    {
+      "text": "L'homme est né libre, et partout il est dans les fers.",
+      "author": "Jean-Jacques Rousseau"
+    },
+    {
+      "text": "Rien ne sert de courir, il faut partir à point.",
+      "author": "Jean de La Fontaine"
+    },
+    {
+      "text": "La vie est un sommeil, l'amour en est le rêve.",
+      "author": "Alfred de Musset"
+    },
+    {
+      "text": "On ne voit bien qu'avec le cœur.",
+      "author": "Antoine de Saint-Exupéry"
+    },
+    {
+      "text": "Aide-toi, le ciel t'aidera.",
+      "author": "Jean de La Fontaine"
+    }
+  ],
+  "de": [
+    {
+      "text": "Über allen Gipfeln ist Ruh.",
+      "author": "Johann Wolfgang von Goethe"
+    },
+    {
+      "text": "Zwei Seelen wohnen, ach, in meiner Brust.",
+      "author": "Johann Wolfgang von Goethe"
+    },
+    {
+      "text": "Es irrt der Mensch, solang er strebt.",
+      "author": "Johann Wolfgang von Goethe"
+    },
+    {
+      "text": "Alle Theorie, lieber Freund, ist grau.",
+      "author": "Johann Wolfgang von Goethe"
+    },
+    {
+      "text": "Die Gedanken sind frei.",
+      "author": "Traditional"
+    },
+    {
+      "text": "Nur die Lumpe sind bescheiden.",
+      "author": "Johann Wolfgang von Goethe"
+    },
+    {
+      "text": "Was du ererbt von deinen Vätern hast, erwirb es, um es zu besitzen.",
+      "author": "Johann Wolfgang von Goethe"
+    },
+    {
+      "text": "Der Worte sind genug gewechselt, lasst mich auch endlich Taten sehn.",
+      "author": "Johann Wolfgang von Goethe"
+    }
+  ],
+  "pt": [
+    {
+      "text": "O amor é um fogo que arde sem se ver.",
+      "author": "Luís de Camões"
+    },
+    {
+      "text": "Mudam-se os tempos, mudam-se as vontades.",
+      "author": "Luís de Camões"
+    },
+    {
+      "text": "Navegar é preciso, viver não é preciso.",
+      "author": "Luís de Camões"
+    },
+    {
+      "text": "Minha terra tem palmeiras, onde canta o sabiá.",
+      "author": "Gonçalves Dias"
+    },
+    {
+      "text": "Tudo vale a pena se a alma não é pequena.",
+      "author": "Fernando Pessoa"
+    },
+    {
+      "text": "O poeta é um fingidor.",
+      "author": "Fernando Pessoa"
+    },
+    {
+      "text": "Tenho em mim todos os sonhos do mundo.",
+      "author": "Fernando Pessoa"
+    },
+    {
+      "text": "O binómio de Newton é tão belo como a Vénus de Milo.",
+      "author": "Fernando Pessoa"
+    }
   ]
 }
