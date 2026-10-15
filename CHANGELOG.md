@@ -2,6 +2,8 @@
 
 All notable changes to TypeFlow are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project follows [Semantic Versioning](https://semver.org/).
 
+A push to `main` publishes the next version from the commits since the last release. A `feat` commit raises the minor version, a `fix` commit raises the patch, and a breaking change raises the major. Those commit summaries become the notes for that version and for the GitHub Release. The version shown in the app is updated in the same step.
+
 ## [Unreleased]
 
 ### Added
