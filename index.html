@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0c0f14">
+    <meta name="description" content="TypeFlow is a calm, precise typing speed test for desktop and mobile keyboards.">
+    <title>TypeFlow</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="TypeFlow home">
+          <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="8" fill="currentColor" opacity="0.14"></rect>
+            <rect x="7.5" y="7" width="3" height="18" rx="1.5" fill="var(--accent)"></rect>
+            <path d="M14 10.5h9.5M14 16h12.5M14 21.5h6.5" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"></path>
+          </svg>
+          <span class="brand-name">TypeFlow</span>
+        </a>
+        <div class="live-stats" aria-hidden="true">
+          <p class="stat"><span id="stat-wpm">—</span><small>wpm</small></p>
+          <p class="stat"><span id="stat-raw">—</span><small>raw</small></p>
+          <p class="stat"><span id="stat-acc">—</span><small>acc</small></p>
+          <p class="stat stat-time"><span id="stat-time">30</span><small id="stat-time-label">time</small></p>
+        </div>
+        <nav class="nav" aria-label="Primary">
+          <button type="button" class="nav-btn" id="nav-test" aria-current="page">Test</button>
+          <button type="button" class="nav-btn" id="nav-stats">Stats</button>
+          <button type="button" class="icon-btn" id="nav-restart" aria-label="Restart test">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="nav-settings" aria-label="Open settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M18 6l-1.6 1.6M7.6 16.4 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </nav>
+      </header>
+      <p id="live-announcer" class="sr-only" aria-live="polite"></p>
+
+      <main id="main">
+        <section id="view-test" class="view" aria-label="Typing test">
+          <div class="config" id="config-bar" role="toolbar" aria-label="Test options"></div>
+          <p id="keyboard-hint" class="hint" hidden>
+            <span>A Bluetooth or USB-C keyboard feels best. The on-screen keyboard still works.</span>
+            <button type="button" id="hint-dismiss">Got it</button>
+          </p>
+          <div class="passage-card" id="passage-card">
+            <p id="quote-by" class="quote-by" hidden></p>
+            <div class="passage-frame" id="passage-frame">
+              <div class="passage-shift" id="passage-shift">
+                <div class="words" id="words" aria-hidden="true"></div>
+                <div class="caret" id="caret" aria-hidden="true"></div>
+              </div>
+            </div>
+            <p id="passage-error" class="passage-error" hidden></p>
+          </div>
+          <p class="shortcut-hint"><kbd>Tab</kbd> then <kbd>Enter</kbd> restarts <span aria-hidden="true">·</span> <kbd>Esc</kbd> opens settings</p>
+        </section>
+
+        <section id="view-results" class="view" hidden aria-labelledby="result-heading">
+          <header class="results-head">
+            <p class="eyebrow" id="result-mode">Result</p>
+            <h1 class="result-wpm" id="result-heading"><span id="result-wpm">0</span><small>wpm</small></h1>
+          </header>
+          <dl class="metric-grid">
+            <div class="card metric"><dt>Raw</dt><dd id="result-raw">0</dd></div>
+            <div class="card metric"><dt>Accuracy</dt><dd id="result-acc">0%</dd></div>
+            <div class="card metric"><dt>Consistency</dt><dd id="result-con">0%</dd></div>
+            <div class="card metric"><dt>Time</dt><dd id="result-time">0s</dd></div>
+            <div class="card metric"><dt>Correct</dt><dd id="result-correct">0</dd></div>
+            <div class="card metric"><dt>Incorrect</dt><dd id="result-incorrect">0</dd></div>
+            <div class="card metric"><dt>Extra</dt><dd id="result-extra">0</dd></div>
+            <div class="card metric"><dt>Missed</dt><dd id="result-missed">0</dd></div>
+          </dl>
+          <article class="card block">
+            <h2>Pace</h2>
+            <div class="chart-wrap"><canvas id="wpm-chart" aria-label="Words per minute and raw words per minute each second"></canvas></div>
+            <p id="chart-fallback" class="empty" hidden>Chart could not be loaded.</p>
+          </article>
+          <article class="card block">
+            <h2>Mistyped keys</h2>
+            <div id="heatmap" class="heatmap"></div>
+            <p id="heatmap-note" class="empty"></p>
+          </article>
+          <div class="split">
+            <article class="card block">
+              <h2>Slowest words</h2>
+              <ol id="slow-words" class="word-list"></ol>
+            </article>
+            <article class="card block">
+              <h2>Most mistyped</h2>
+              <ol id="mistyped-words" class="word-list"></ol>
+            </article>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="result-retry">Retry</button>
+            <button type="button" class="btn" id="result-share">Download card</button>
+            <button type="button" class="btn" id="result-stats">View stats</button>
+          </div>
+        </section>
+
+        <section id="view-stats" class="view" hidden aria-labelledby="stats-heading">
+          <header class="section-head">
+            <h1 id="stats-heading">Your typing</h1>
+            <p>Personal bests, pace over time, and every test saved on this device.</p>
+          </header>
+          <dl class="metric-grid" id="stats-summary"></dl>
+          <article class="card block">
+            <h2>Personal bests</h2>
+            <div id="bests" class="bests"></div>
+          </article>
+          <article class="card block">
+            <h2>Progress</h2>
+            <div class="chart-wrap"><canvas id="progress-chart" aria-label="Net words per minute across saved tests"></canvas></div>
+            <p id="progress-empty" class="empty" hidden>Finish a test to see your progress.</p>
+          </article>
+          <article class="card block">
+            <h2>Recent tests</h2>
+            <ol id="recent-tests" class="recent"></ol>
+          </article>
+          <div class="actions">
+            <button type="button" class="btn" id="export-csv">Export CSV</button>
+            <button type="button" class="btn btn-danger" id="reset-data">Reset data</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="settings-dialog" class="scrim" hidden>
+      <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <header class="dialog-head">
+          <h2 id="settings-title">Settings</h2>
+          <button type="button" class="icon-btn" id="settings-close" aria-label="Close settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </header>
+        <div class="dialog-body">
+          <fieldset>
+            <legend>Theme</legend>
+            <div class="theme-grid" id="theme-picker" role="radiogroup" aria-label="Theme"></div>
+          </fieldset>
+          <div id="settings-options"></div>
+          <p class="version" id="app-version"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="confirm-dialog" class="scrim" hidden>
+      <div class="dialog dialog-confirm" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-copy">
+        <h2 id="confirm-title">Reset saved tests?</h2>
+        <p id="confirm-copy">This deletes every result stored on this device. It cannot be undone.</p>
+        <div class="actions">
+          <button type="button" class="btn" id="confirm-cancel">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirm-ok">Reset data</button>
+        </div>
+      </div>
+    </div>
+
+    <label class="sr-only" for="typing-input">Typing input</label>
+    <input id="typing-input" class="typing-capture" type="text" name="typeflow-capture" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Typing input" inputmode="text">
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
