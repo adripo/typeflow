@@ -31,7 +31,7 @@ A calm, precise typing speed test. Time, word, and quote sessions, live accuracy
 - `localStorage` for settings, theme, and history
 - GitHub Pages, deployed from the `main` branch by GitHub Actions
 
-There is no build step. TypeFlow uses [semantic versioning](https://semver.org/). The current release is **1.0.0**. A push to `main` cuts the next release from conventional commits, writes [CHANGELOG.md](CHANGELOG.md), and publishes a GitHub Release.
+There is no build step. TypeFlow uses [semantic versioning](https://semver.org/). The current release is **1.1.0**. A push to `main` cuts the next release from conventional commits, writes [CHANGELOG.md](CHANGELOG.md), and publishes a GitHub Release.
 
 GitHub Pages has to be enabled once, with the source set to GitHub Actions. The deploy workflow cannot turn that on by itself.
 
