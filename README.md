@@ -9,9 +9,10 @@ A calm, precise typing speed test. Time, word, and quote sessions, live accuracy
 ## Features
 
 - Time tests (15s, 30s, 60s, 120s), word counts (10, 25, 50, 100), and quote mode
-- English and Italian word lists, plus famous public-domain quotes
+- Word lists and public-domain quotes in English, Italian, Spanish, French, German, and Portuguese
 - Punctuation and numbers when you want a harder passage
 - Character-by-character feedback, extra letters, and a smooth caret
+- Optional flow mode that keeps the caret centered while the text moves
 - Live net WPM, raw WPM, accuracy, and timer
 - Results with consistency, character totals, a per-second pace chart, a keyboard heatmap, and your slowest and most mistyped words
 - History in the browser: personal bests, averages, a progress chart, total time typed, and a daily streak
@@ -50,6 +51,7 @@ On a phone, use the same Wi-Fi and open `http://<this-computer-lan-ip>:8080/`. T
 index.html
 css/styles.css
 js/app.js        boot, settings, shortcuts
+js/languages.js  language names
 js/test.js       passage, input, and metrics
 js/stats.js      bests, streak, averages, CSV
 js/storage.js    localStorage

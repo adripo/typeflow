@@ -10,6 +10,7 @@ export const DEFAULT_SETTINGS = {
   language: "en",
   punctuation: false,
   numbers: false,
+  focusCaret: false,
   hintDismissed: false,
 };
 

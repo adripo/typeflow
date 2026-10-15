@@ -30,7 +30,7 @@
           <p class="stat"><span id="stat-wpm">—</span><small>wpm</small></p>
           <p class="stat"><span id="stat-raw">—</span><small>raw</small></p>
           <p class="stat"><span id="stat-acc">—</span><small>acc</small></p>
-          <p class="stat stat-time"><span id="stat-time">30</span><small id="stat-time-label">time</small></p>
+          <p class="stat stat-time"><span id="stat-time">30.00</span><small id="stat-time-label">sec</small></p>
         </div>
         <nav class="nav" aria-label="Primary">
           <button type="button" class="nav-btn" id="nav-test" aria-current="page">Test</button>
@@ -57,8 +57,8 @@
             <div class="passage-frame" id="passage-frame">
               <div class="passage-shift" id="passage-shift">
                 <div class="words" id="words" aria-hidden="true"></div>
-                <div class="caret" id="caret" aria-hidden="true"></div>
               </div>
+              <div class="caret" id="caret" aria-hidden="true"></div>
             </div>
             <p id="passage-error" class="passage-error" hidden></p>
           </div>
@@ -66,6 +66,7 @@
         </section>
 
         <section id="view-results" class="view" hidden aria-labelledby="result-heading">
+          <div class="view-body">
           <header class="results-head">
             <p class="eyebrow" id="result-mode">Result</p>
             <h1 class="result-wpm" id="result-heading"><span id="result-wpm">0</span><small>wpm</small></h1>
@@ -100,7 +101,8 @@
               <ol id="mistyped-words" class="word-list"></ol>
             </article>
           </div>
-          <div class="actions">
+          </div>
+          <div class="actions view-actions">
             <button type="button" class="btn btn-primary" id="result-retry">Retry</button>
             <button type="button" class="btn" id="result-share">Download card</button>
             <button type="button" class="btn" id="result-stats">View stats</button>
@@ -108,6 +110,7 @@
         </section>
 
         <section id="view-stats" class="view" hidden aria-labelledby="stats-heading">
+          <div class="view-body">
           <header class="section-head">
             <h1 id="stats-heading">Your typing</h1>
             <p>Personal bests, pace over time, and every test saved on this device.</p>
@@ -126,7 +129,8 @@
             <h2>Recent tests</h2>
             <ol id="recent-tests" class="recent"></ol>
           </article>
-          <div class="actions">
+          </div>
+          <div class="actions view-actions">
             <button type="button" class="btn" id="export-csv">Export CSV</button>
             <button type="button" class="btn btn-danger" id="reset-data">Reset data</button>
           </div>

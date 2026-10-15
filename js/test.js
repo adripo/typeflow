@@ -1,14 +1,18 @@
+import { LANGUAGES, normalizeLanguage } from "./languages.js";
+
 let corpora = null;
 let lastQuote = "";
 
 export async function loadCorpora() {
   const base = new URL("../assets/", import.meta.url);
-  const [en, it, quotes] = await Promise.all([
-    readJson(new URL("words-en.json", base)),
-    readJson(new URL("words-it.json", base)),
+  const [lists, quotes] = await Promise.all([
+    Promise.all(LANGUAGES.map((language) => readJson(new URL(`words-${language.id}.json`, base)))),
     readJson(new URL("quotes.json", base)),
   ]);
-  corpora = { en, it, quotes };
+  corpora = {
+    words: Object.fromEntries(LANGUAGES.map((language, index) => [language.id, lists[index]])),
+    quotes,
+  };
 }
 
 async function readJson(url) {
@@ -38,7 +42,7 @@ export function createTest(config, preset) {
     mode,
     timeLimit: Number(config.timeLimit) || 30,
     wordCount: Number(config.wordCount) || 25,
-    language: config.language === "it" ? "it" : "en",
+    language: normalizeLanguage(config.language),
     punctuation: Boolean(config.punctuation),
     numbers: Boolean(config.numbers),
     author,
@@ -145,15 +149,15 @@ export function metrics(test, now = performance.now()) {
   return { ...counts, elapsed, wpm, raw, accuracy };
 }
 
+export function secondsLeft(test, now = performance.now()) {
+  if (test.mode !== "time") return null;
+  if (test.status === "idle") return test.timeLimit;
+  return Math.max(0, test.timeLimit - activeElapsed(test, now) / 1000);
+}
+
 export function timerLabel(test, now = performance.now()) {
-  if (test.mode === "time") {
-    if (test.status === "idle") return String(test.timeLimit);
-    const left = Math.max(0, test.timeLimit - activeElapsed(test, now) / 1000);
-    return String(Math.ceil(left - 1e-9));
-  }
-  const elapsed = Math.floor(activeElapsed(test, now) / 1000);
-  const minutes = Math.floor(elapsed / 60);
-  return `${minutes}:${String(elapsed % 60).padStart(2, "0")}`;
+  const seconds = test.mode === "time" ? secondsLeft(test, now) : activeElapsed(test, now) / 1000;
+  return seconds.toFixed(2);
 }
 
 export function buildResult(test) {
@@ -167,10 +171,10 @@ export function buildResult(test) {
     language: test.language,
     punctuation: test.punctuation,
     numbers: test.numbers,
-    wpm: round1(snapshot.wpm),
-    rawWpm: round1(snapshot.raw),
-    accuracy: round1(snapshot.accuracy),
-    consistency: Math.round(consistency(timeline)),
+    wpm: round2(snapshot.wpm),
+    rawWpm: round2(snapshot.raw),
+    accuracy: round2(snapshot.accuracy),
+    consistency: round2(consistency(timeline)),
     correct: snapshot.correct,
     incorrect: snapshot.incorrect,
     extra: snapshot.extra,
@@ -184,7 +188,7 @@ export function buildResult(test) {
 }
 
 function wordList(language) {
-  return language === "it" ? corpora.it : corpora.en;
+  return corpora.words[language] || corpora.words.en;
 }
 
 function pickWords(list, count) {
@@ -202,7 +206,7 @@ function pickWords(list, count) {
 }
 
 function pickQuote(language) {
-  const list = corpora.quotes[language === "it" ? "it" : "en"];
+  const list = corpora.quotes[language] || corpora.quotes.en;
   let quote = list[Math.floor(Math.random() * list.length)];
   if (list.length > 1 && quote.text === lastQuote) {
     quote = list.find((item) => item.text !== lastQuote) || quote;
@@ -407,8 +411,8 @@ function buildTimeline(test) {
     const minutes = windowMs / 60000;
     return {
       second: index + 1,
-      wpm: round1((Math.max(0, bin.correct) / 5) / minutes),
-      raw: round1((Math.max(0, bin.typed) / 5) / minutes),
+      wpm: round2((Math.max(0, bin.correct) / 5) / minutes),
+      raw: round2((Math.max(0, bin.typed) / 5) / minutes),
       errors: Math.max(0, bin.errors),
       partial: windowMs < 980,
       windowMs,
@@ -438,8 +442,8 @@ function wordStats(test) {
   }));
 }
 
-function round1(value) {
-  return Math.round(value * 10) / 10;
+function round2(value) {
+  return Math.round(value * 100) / 100;
 }
 
 function uid() {

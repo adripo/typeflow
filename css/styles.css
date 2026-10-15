@@ -163,7 +163,8 @@
 html,
 body {
   margin: 0;
-  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-ui);
@@ -211,13 +212,14 @@ button {
   top: var(--vv-top);
   left: 0;
   right: 0;
-  height: var(--vvh);
+  height: min(var(--vvh), calc(100% - var(--vv-top)));
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding:
     max(0.75rem, env(safe-area-inset-top))
     max(1rem, env(safe-area-inset-right))
-    max(0.75rem, env(safe-area-inset-bottom))
+    max(2.5rem, env(safe-area-inset-bottom))
     var(--pad);
   width: min(1040px, 100%);
   margin-inline: auto;
@@ -261,7 +263,16 @@ button {
   display: flex;
   flex-direction: column;
   margin: 0;
-  min-width: 3.2rem;
+  min-width: 3.6rem;
+}
+
+.stat-time {
+  min-width: 5.1rem;
+}
+
+.stat-time.is-urgent span,
+.stat-time.is-urgent small {
+  color: var(--error);
 }
 
 .stat span {
@@ -382,11 +393,24 @@ main {
 .view {
   flex: 1;
   min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  overflow: auto;
-  padding-bottom: 0.5rem;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.view-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 0.35rem;
 }
 
 [hidden] {
@@ -404,6 +428,30 @@ main {
   align-items: center;
 }
 
+.config-slot {
+  display: grid;
+  align-items: center;
+}
+
+.config-slot > .seg,
+.slot-note {
+  grid-area: 1 / 1;
+  justify-self: start;
+}
+
+.config-slot > .is-inactive {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.slot-note {
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
 .seg {
   display: flex;
   flex-wrap: wrap;
@@ -417,6 +465,94 @@ main {
 .seg .chip {
   border-color: transparent;
   background: transparent;
+}
+
+.chip .unit {
+  display: inline-block;
+  margin-left: 0.16em;
+  font-size: 0.85em;
+  letter-spacing: 0;
+  line-height: 1;
+  opacity: 0.78;
+  vertical-align: 0.05em;
+}
+
+.chip {
+  white-space: nowrap;
+}
+
+.lang-field {
+  position: relative;
+}
+
+.lang-current {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.02rem;
+  min-width: 8.6rem;
+  padding: 0.28rem 0.75rem 0.34rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--card) 80%, transparent);
+  text-align: left;
+}
+
+.lang-current:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.lang-kicker {
+  color: var(--faint);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lang-value,
+.lang-option,
+.lang-menu [role="option"] {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.lang-code {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.lang-name {
+  font-size: 0.92rem;
+}
+
+.lang-menu {
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  max-height: min(18rem, 60vh);
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card-solid);
+  box-shadow: var(--shadow);
+}
+
+.lang-menu [role="option"] {
+  width: 100%;
+  padding: 0.48rem 0.6rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.lang-menu [role="option"][aria-selected="true"],
+.lang-menu [role="option"]:hover,
+.lang-menu [role="option"]:focus-visible {
+  background: var(--accent-soft);
+  outline: none;
 }
 
 .hint {
@@ -537,6 +673,23 @@ main {
   pointer-events: none;
   transition: transform 70ms linear;
   animation: caret-blink 1.05s steps(1) infinite;
+}
+
+.passage-card.is-flow .passage-shift {
+  position: absolute;
+  left: 0;
+  width: max-content;
+  transition: transform 50ms linear;
+}
+
+.passage-card.is-flow .words {
+  white-space: nowrap;
+  line-height: 1.45;
+}
+
+.passage-card.is-flow .passage-frame {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
 }
 
 @keyframes caret-blink {
@@ -678,6 +831,8 @@ kbd {
 }
 
 .heatmap {
+  min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
   padding-bottom: 0.2rem;
 }
@@ -727,6 +882,25 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.view-actions {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 0.7rem 0.7rem;
+  background: var(--bg);
+}
+
+.card,
+.block,
+.split {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .bests {
@@ -763,10 +937,10 @@ kbd {
 }
 
 .dialog {
-  width: min(440px, 100%);
+  width: min(460px, 100%);
   max-height: min(86dvh, var(--vvh));
   overflow: auto;
-  padding: 1rem 1rem 1.1rem;
+  padding: 1.15rem 1.25rem 1.3rem;
   background: var(--card-solid);
 }
 
@@ -783,8 +957,21 @@ kbd {
 
 .dialog-body {
   display: grid;
-  gap: 1rem;
-  margin-top: 0.9rem;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+#settings-options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.config-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .version {
@@ -863,7 +1050,7 @@ legend {
 
 @media (min-width: 720px) {
   .app {
-    padding-top: 1.1rem;
+    padding-top: 2.5rem;
   }
 
   .topbar {

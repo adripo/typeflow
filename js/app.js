@@ -1,3 +1,4 @@
+import { normalizeLanguage } from "./languages.js";
 import { loadHistory, loadSettings, saveResult, saveSettings, clearHistory } from "./storage.js";
 import { summarize } from "./stats.js";
 import {
@@ -47,7 +48,8 @@ document.querySelector("#app-version").textContent = `TypeFlow ${VERSION}`;
 
 const touch = matchMedia("(pointer: coarse)").matches || navigator.maxTouchPoints > 0;
 ui.showHint(touch && !settings.hintDismissed);
-document.documentElement.lang = settings.language === "it" ? "it" : "en";
+settings.language = normalizeLanguage(settings.language);
+document.documentElement.lang = settings.language;
 
 try {
   await loadCorpora();
@@ -174,7 +176,7 @@ function complete() {
   ui.showResults(lastResult);
   ui.blurCapture();
   ui.syncConfig(settings, false);
-  document.title = `${Math.round(lastResult.wpm)} WPM · TypeFlow`;
+  document.title = `${Number(lastResult.wpm).toFixed(2)} WPM · TypeFlow`;
   document.getElementById("result-retry")?.focus({ preventScroll: true });
 }
 
@@ -188,15 +190,26 @@ function restart() {
   ui.showView("test");
   ui.renderPassage(test);
   ui.updateLive(test);
+  ui.announce("");
   ui.syncConfig(settings, false);
   ui.focusCapture();
 }
 
 function updateConfig(patch) {
-  if (!test || test.status === "running") return;
+  if (!test) return;
+  if (Object.keys(patch).length === 1 && Object.hasOwn(patch, "focusCaret")) {
+    settings.focusCaret = Boolean(patch.focusCaret);
+    saveSettings(settings);
+    ui.syncConfig(settings, test.status === "running");
+    ui.updatePassage(test);
+    if (view === "test") ui.focusCapture();
+    return;
+  }
+  if (test.status === "running") return;
   Object.assign(settings, patch);
+  settings.language = normalizeLanguage(settings.language);
   saveSettings(settings);
-  document.documentElement.lang = settings.language === "it" ? "it" : "en";
+  document.documentElement.lang = settings.language;
   test = createTest(settings);
   ui.renderPassage(test);
   ui.updateLive(test);
@@ -264,6 +277,6 @@ async function resetHistory() {
 
 function liveSentence() {
   const snapshot = metrics(test);
-  const clock = test.mode === "time" ? `${timerLabel(test)} seconds left` : timerLabel(test);
-  return `${Math.round(snapshot.wpm)} words per minute, ${snapshot.accuracy.toFixed(0)} percent accuracy, ${clock}.`;
+  const clock = test.mode === "time" ? `${timerLabel(test)} seconds left` : `${timerLabel(test)} elapsed`;
+  return `${snapshot.wpm.toFixed(1)} words per minute, ${snapshot.accuracy.toFixed(1)} percent accuracy, ${clock}.`;
 }

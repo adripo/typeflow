@@ -1,3 +1,5 @@
+import { LANGUAGES, languageById } from "./languages.js";
+
 const ORDER = [
   ["time", 15],
   ["time", 30],
@@ -18,18 +20,18 @@ export function summarize(history) {
   const bests = [];
 
   for (const [mode, modeValue] of ORDER) {
-    for (const language of ["en", "it"]) {
+    for (const language of LANGUAGES) {
       const rows = history.filter((row) => (
         row.mode === mode
         && String(row.modeValue) === String(modeValue)
-        && row.language === language
+        && row.language === language.id
       ));
       if (!rows.length) continue;
       const best = rows.reduce((top, row) => (isBetter(row, top) ? row : top));
       bests.push({
         label: modeLabel(best),
-        language: language === "it" ? "IT" : "EN",
-        wpm: Math.round(best.wpm),
+        language: language.code,
+        wpm: best.wpm,
         accuracy: best.accuracy,
         timestamp: best.timestamp,
       });
@@ -59,7 +61,7 @@ export function modeLabel(result) {
 }
 
 export function resultSubtitle(result) {
-  const language = result.language === "it" ? "Italian" : "English";
+  const language = languageById(result.language).name;
   if (result.mode === "time") return `${result.modeValue} second test · ${language}`;
   if (result.mode === "words") return `${result.modeValue} words · ${language}`;
   const author = result.quoteAuthor ? `${result.quoteAuthor} · ` : "";
@@ -67,13 +69,13 @@ export function resultSubtitle(result) {
 }
 
 export function formatDuration(ms) {
-  const total = Math.max(0, Math.round((ms || 0) / 1000));
+  const total = Math.max(0, (ms || 0) / 1000);
   const hours = Math.floor(total / 3600);
   const minutes = Math.floor((total % 3600) / 60);
-  const seconds = total % 60;
+  const seconds = total - hours * 3600 - minutes * 60;
   if (hours) return `${hours}h ${minutes}m`;
-  if (minutes) return `${minutes}m ${seconds}s`;
-  return `${seconds}s`;
+  if (minutes) return `${minutes}m ${seconds.toFixed(2)}s`;
+  return `${seconds.toFixed(2)}s`;
 }
 
 export function historyToCsv(history) {
@@ -111,7 +113,7 @@ export function historyToCsv(history) {
       row.incorrect,
       row.extra,
       row.missed,
-      Math.round((row.durationMs || 0) / 100) / 10,
+      Math.round((row.durationMs || 0) / 10) / 100,
     ];
     lines.push(values.map(csvCell).join(","));
   }
